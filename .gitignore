@@ -1,0 +1,99 @@
+# macOS / OS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+Thumbs.db
+
+# Editor settings & project files
+.vscode/
+.idea/
+*.code-workspace
+*.iml
+*.sublime-*
+*.swp
+*.swo
+*~
+
+# Environment files & secrets (keep the committed examples)
+.env
+.env.*
+!.env.example
+!.env.*.example
+.envrc
+
+# Python / FastAPI backend artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+*.egg
+*.egg-info/
+*.dist-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+.installed.cfg
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+.cache/
+.tox/
+.venv/
+venv/
+ENV/
+env/
+.python-version
+
+# Node / Vite frontend artifacts
+node_modules/
+**/node_modules/
+**/.vite/
+**/.nuxt/
+.next/
+out/
+**/dist/
+**/build/
+**/.cache/
+**/.eslintcache
+**/.stylelintcache
+**/.parcel-cache
+**/.turbo
+*.tsbuildinfo
+
+# Logs & test reports
+logs/
+log/
+*.log
+*.log.*
+.nyc_output/
+coverage/
+coverage-final.json
+
+# OpenAPI generator working files
+.openapi-generator/
+.openapi-generator-ignore
+
+# Docker / Traefik runtime files
+infra/traefik/acme.json
+pgdata/
+docker-data/
+
+# Database dumps & local dev data
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.psql
+*.pgdump
+*.dump
+*.backup
+
+# Misc
+.idea_modules/
+.DS_Store?
