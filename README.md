@@ -1,4 +1,4 @@
-# Exam App Scaffold
+# Gotta really catch em all
 
 Docker-first scaffold with FastAPI backend, placeholder frontend, PostgreSQL, and Traefik routing so the stack runs with a single `docker compose up --build`.
 
