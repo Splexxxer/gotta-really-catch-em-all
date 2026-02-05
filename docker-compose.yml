@@ -1,0 +1,70 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    command:
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"
+      - "8080:8080" # Traefik dashboard (dev only)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./infra/traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+    networks:
+      - edge
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      - DATABASE_URL=postgresql+psycopg://examapp:examapp@db:5432/examapp
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=PathPrefix(`/api`)
+      - traefik.http.routers.backend.entrypoints=web
+      - traefik.http.routers.backend.priority=100
+      - traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api
+      - traefik.http.routers.backend.middlewares=backend-stripprefix,security-headers@file
+      - traefik.http.services.backend.loadbalancer.server.port=8000
+    depends_on:
+      - db
+    networks:
+      - edge
+      - internal
+
+  frontend:
+    build:
+      context: ./frontend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=PathPrefix(`/`)
+      - traefik.http.routers.frontend.entrypoints=web
+      - traefik.http.routers.frontend.priority=10
+      - traefik.http.routers.frontend.middlewares=security-headers@file
+      - traefik.http.services.frontend.loadbalancer.server.port=80
+    networks:
+      - edge
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=examapp
+      - POSTGRES_USER=examapp
+      - POSTGRES_PASSWORD=examapp
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - internal
+    # no ports -> internal only
+
+volumes:
+  pgdata:
+
+networks:
+  edge:
+  internal:
+    internal: true
