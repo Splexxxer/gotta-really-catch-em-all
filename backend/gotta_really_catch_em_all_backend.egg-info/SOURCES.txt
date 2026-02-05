@@ -1,9 +1,0 @@
-pyproject.toml
-app/__init__.py
-app/main.py
-gotta_really_catch_em_all_backend.egg-info/PKG-INFO
-gotta_really_catch_em_all_backend.egg-info/SOURCES.txt
-gotta_really_catch_em_all_backend.egg-info/dependency_links.txt
-gotta_really_catch_em_all_backend.egg-info/requires.txt
-gotta_really_catch_em_all_backend.egg-info/top_level.txt
-tests/test_health.py

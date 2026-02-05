@@ -1,9 +1,0 @@
-pyproject.toml
-app/__init__.py
-app/main.py
-examapp_backend.egg-info/PKG-INFO
-examapp_backend.egg-info/SOURCES.txt
-examapp_backend.egg-info/dependency_links.txt
-examapp_backend.egg-info/requires.txt
-examapp_backend.egg-info/top_level.txt
-tests/test_health.py
