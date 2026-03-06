@@ -21,7 +21,7 @@ services:
     build:
       context: ./backend
     environment:
-      - DATABASE_URL=postgresql+psycopg://examapp:examapp@db:5432/examapp
+      - DATABASE_URL=postgresql+psycopg://${POSTGRES_USER:?Set POSTGRES_USER in .env}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:?Set POSTGRES_DB in .env}
     labels:
       - traefik.enable=true
       - traefik.http.routers.backend.rule=PathPrefix(`/api`)
@@ -52,14 +52,26 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=examapp
-      - POSTGRES_USER=examapp
-      - POSTGRES_PASSWORD=examapp
+      - POSTGRES_DB=${POSTGRES_DB:?Set POSTGRES_DB in .env}
+      - POSTGRES_USER=${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - internal
-    # no ports -> internal only
+
+  # no this is dev only and shouldnt be exposed!!! if you are not a dev just use make up
+  db-forward:
+    image: alpine/socat
+    command: TCP-LISTEN:15432,fork,reuseaddr TCP:db:5432
+    ports:
+      - "127.0.0.1:15432:15432"
+    networks:
+      - internal
+      - edge
+    depends_on:
+      - db
+    profiles: [ "dev" ]
 
 volumes:
   pgdata:
@@ -68,3 +80,4 @@ networks:
   edge:
   internal:
     internal: true
+
