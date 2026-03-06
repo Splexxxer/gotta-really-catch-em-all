@@ -7,36 +7,39 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  backend:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: sqlite:///./test.db
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-        
-    - name: Install dependencies
-      run: |
-        cd backend
-        python -m pip install --upgrade pip
-        pip install -v -r requirements.txt  # oder requirements-dev.txt
-        
-    - name: Lint
-      run: |
-        cd backend
-        ruff check .
-        ruff format --check .
-        
-    - name: Test
-      run: |
-        cd backend
-        pytest -q
-        
-  build:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install backend dependencies
+        run: python -m pip install -e "./backend[dev]"
+
+      - name: Lint backend
+        run: make backend-lint
+
+      - name: Test backend
+        run: make backend-test
+
+  docker-build:
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_DB: examapp
+      POSTGRES_USER: examapp
+      POSTGRES_PASSWORD: examapp
     steps:
-    - uses: actions/checkout@v4
-    - name: Docker build
-      run: docker compose build
+      - uses: actions/checkout@v4
+
+      - name: Docker Compose build
+        run: docker compose build
